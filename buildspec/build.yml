@@ -1,0 +1,27 @@
+version: 0.2
+
+env:
+  variables:
+    REPOSITORY_URI: $ECR_REPO
+
+phases:
+  pre_build:
+    commands:
+      # login to ECR
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      # get commit hash
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+  build:
+    commands:
+      # build go app with static link
+      - docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp -e CGO_ENABLED=0 -e GOOS=linux golang:latest go build -a -installsuffix cgo -o main -v .
+      # build lightweight app image which only contains the binary
+      - docker build . -t $REPOSITORY_URI:latest
+      # tag image
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$COMMIT_HASH
+  post_build:
+    commands:
+      # push to ECR
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$COMMIT_HASH
+
