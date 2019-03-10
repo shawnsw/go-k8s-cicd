@@ -1,10 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    NAMESPACE: $EKS_NAMESPACE
-    REPOSITORY_URI: $ECR_REPO
-
 phases:
   pre_build:
     commands:
@@ -18,10 +13,10 @@ phases:
   build:
     commands:
       # create namespace
-      - kubectl create ns $NAMESPACE || true
+      - kubectl create ns $EKS_NAMESPACE || true
       # set current namespace
-      - kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
+      - kubectl config set-context $(kubectl config current-context) --namespace=$EKS_NAMESPACE
       # update image in deployment
-      - sed -i '' 's/IMAGE_NAME:IMAGE_TAG/$REPOSITORY_URI:$COMMIT_HASH/g' kubespec/deployment.yml
+      - sed -i '' 's/IMAGE_NAME:IMAGE_TAG/$ECR_REPO:$COMMIT_HASH/g' kubespec/deployment.yml
       # apply kube specs
       - kubectl apply -f kubespec/deployment.yml kubespec/service.yml

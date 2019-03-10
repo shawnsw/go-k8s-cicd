@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    REPOSITORY_URI: $ECR_REPO
-
 phases:
   pre_build:
     commands:
@@ -16,12 +12,12 @@ phases:
       # build go app with static link
       - docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp -e CGO_ENABLED=0 -e GOOS=linux golang:latest go build -a -installsuffix cgo -o main -v .
       # build lightweight app image which only contains the binary
-      - docker build . -t $REPOSITORY_URI:latest
+      - docker build . -t $ECR_REPO:latest
       # tag image
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$COMMIT_HASH
+      - docker tag $ECR_REPO:latest $ECR_REPO:$COMMIT_HASH
   post_build:
     commands:
       # push to ECR
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$COMMIT_HASH
+      - docker push $ECR_REPO:latest
+      - docker push $ECR_REPO:$COMMIT_HASH
 
