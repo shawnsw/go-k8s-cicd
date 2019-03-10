@@ -19,4 +19,4 @@ phases:
       # update image in deployment
       - sed -i.'' 's/IMAGE_NAME:IMAGE_TAG/$ECR_REPO:$COMMIT_HASH/g' kubespec/deployment.yml
       # apply kube specs
-      - kubectl apply -f kubespec/deployment.yml kubespec/service.yml
+      - kubectl apply -f kubespec/deployment.yml -f kubespec/service.yml
