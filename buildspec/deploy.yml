@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    NAMESPACE: $EKS-NAMESPACE
-    REPOSITORY_URI: $ECR-REPO
+    NAMESPACE: $EKS_NAMESPACE
+    REPOSITORY_URI: $ECR_REPO
 
 phases:
   pre_build:

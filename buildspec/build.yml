@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    REPOSITORY_URI: $ECR-REPO
+    REPOSITORY_URI: $ECR_REPO
 
 phases:
   pre_build:
