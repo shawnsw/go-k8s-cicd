@@ -13,7 +13,7 @@ Instead of base on `golang:latest` which is almost 800mb in size, the image is b
 The binary is complied with statcially linked libraries in CodeBuild build stage with `golang:alpine` image:
 
 ```
-docker run --rm -v "$(PWD)":/usr/src/myapp -w /usr/src/myapp -e CGO_ENABLED=0 -e GOOS=linux golang:alpine go build -a -installsuffix cgo -o main -v .
+docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp -e CGO_ENABLED=0 -e GOOS=linux golang:alpine go build -a -installsuffix cgo -o main -v .
 ```
 
 ### Makefile
